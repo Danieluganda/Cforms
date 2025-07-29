@@ -1,36 +1,19 @@
-// pages/api/generate-pdf.js pages/api/upload.js
 // pages/api/upload.js
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST requests allowed' });
   }
 
-  const { formUrl, formId } = req.body;
-
   try {
-    // Call the internal PDF generator endpoint
-    const response = await fetch(`${req.headers.origin}/api/generate-pdf`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ formUrl, formId }),
-    });
+    const { uuid, formID, timestamp } = req.body;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to generate PDF: ${errorText}`);
-    }
+    console.log(`📝 Upload received - UUID: ${uuid}, Form ID: ${formID}, Time: ${timestamp}`);
 
-    const pdfBuffer = await response.arrayBuffer();
+    // You can add Google Drive upload logic or DB logging here
 
-    // Send back the generated PDF to the client
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="submission.pdf"');
-    res.send(Buffer.from(pdfBuffer));
+    return res.status(200).json({ message: 'Upload logged successfully' });
   } catch (error) {
-    console.error('Error in /api/upload:', error);
-    res.status(500).json({ error: 'Error processing upload.' });
+    console.error('❌ Upload error:', error);
+    return res.status(500).json({ error: 'Upload failed' });
   }
 }
