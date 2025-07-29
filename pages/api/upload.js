@@ -1,3 +1,4 @@
+// pages/api/generate-pdf.js pages/api/upload.js
 import chromium from 'chrome-aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
