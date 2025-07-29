@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Consent Form</title>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js" defer></script>
+  <style>
+    /* General reset */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f1f1f1;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Container simulates A4 page */
+    #pdf-content .container {
+      width: 794px;
+      /* A4 width in pixels at 96dpi */
+      min-height: 1123px;
+      /* A4 height in pixels at 96dpi */
+      background: #fff;
+      padding: 40px 50px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      color: #333;
+      overflow: hidden;
+    }
+
+    /* Page wrapper (in case you want multipage later) */
+    .page {
+      width: 100%;
+    }
+
+    /* Header logo layout */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    header .logo {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    /* Headings */
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin-top: 30px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f5f5f5;
+      font-weight: bold;
+    }
+
+    /* Checkbox cell style */
+    .checkbox-cell {
+      text-align: center;
+    }
+
+    /* Form */
+    form input,
+    form button {
+      font-size: 14px;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      height: 120px;
+    }
+
+    /* Submit Button */
+    #sendEmailBtn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #sendEmailBtn:hover {
+      background-color: #45a049;
+    }
+
+    /* Responsive tweaks */
+    @media screen and (max-width: 820px) {
+      #pdf-content .container {
+        width: 100%;
+        padding: 20px;
+      }
+    }
+  </style>
+
+  <style>
+    .consent-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+    }
+
+    .consent-table th,
+    .consent-table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .consent-table th {
+      background-color: #f5f5f5;
+    }
+
+    .checkbox-cell {
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+
+      .consent-table,
+      .consent-table thead,
+      .consent-table tbody,
+      .consent-table th,
+      .consent-table td,
+      .consent-table tr {
+        display: block;
+      }
+
+      .consent-table thead {
+        display: none;
+      }
+
+      .consent-table tr {
+        margin-bottom: 15px;
+      }
+
+      .consent-table td {
+        padding: 10px;
+        border: none;
+        position: relative;
+      }
+
+      .consent-table td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .checkbox-cell {
+        text-align: left;
+      }
+    }
+
+    .uuid-display {
+      font-size: 12px;
+      margin-top: 8px;
+      color: #555;
+      text-align: center;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="pdf-content">
+    <form id="signForm" style="font-family: Arial, sans-serif; width: 100%; padding: 20px 0;">
+      <div class="container">
+        <div class="page">
+          <header>
+            <img src="assets/logos/outbox_logo.svg" alt="Right Logo" class="logo" />
+            <img src="assets/logos/uncdf_logo.png" alt="Left Logo" class="logo" />
+            <img src="assets/logos/foundation_logo.png" alt="Right Logo" class="logo" />
+
+            <div id="formUUID" class="uuid-display"></div>
+          </header>
+
+
+          <h1 style="text-align:center;">10X: ENABLING GROWTH OF MSMEs THROUGH THE DIGITAL ECONOMY PROGRAM</h1>
+          <h2 style="text-align:center; text-decoration: underline;">Consent to Collection, Processing and Transfer of
+            Personal and Enterprise Level Data</h2>
+
+          <!-- (Put the rest of your consent text here) -->
+
+          <p align="center"><strong>10X: ENABLING GROWTH OF MSMEs THROUGH THE DIGITAL ECONOMY PROGRAM</strong></p>
+          <p align="center"><strong><u>Consent to Collection, Processing and Transfer of Personal and Enterprise Level
+                Data</u></strong><strong><u> </u></strong></p>
+          <p><a name="_gjdgxs" id="_gjdgxs"></a>Outbox (U) Limited (&lsquo;&lsquo;we&rsquo;&rsquo;, or
+            &lsquo;&lsquo;us&rsquo;&rsquo; is committed to improving its programs and ensuring that they have a positive
+            impact on program participants. To achieve this, we collect and analyse or avail for analysis data about or
+            relating to our program partners and sub-partners. At the same time, we value your privacy, and we are
+            committed to protecting your personal and commercial information. This consent form explains how we will
+            collect, use, store, process, share and transfer information related to your company
+            (&lsquo;&lsquo;enterprise
+            level data&rsquo;&rsquo;), employees and other individuals (&lsquo;&lsquo;personal data&rsquo;&rsquo;)
+            affiliated with or working for your company in connection with the Program (collectively, the
+            &lsquo;&lsquo;Data&rsquo;&rsquo;). </p>
+          <p>The Data which is the subject of this consent form is that which we are required to collect, process and or
+            disclose to us, Mastercard Foundation and other third parties as part of the Program as described below.
+          </p>
+          <p><strong>Program Name:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10X: Enabling growth of
+            MSMEs
+            through the digital economy&nbsp; </p>
+          <p><strong>Data Collector</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Outbox (U) Limited
+            of
+            3rd Floor, Kalooli Lwanga Tower, Plot 83 &amp; 85, Ntinda Road Kampala, Uganda &ndash; +256 (0)&nbsp;392 000
+            152; <a href="mailto:info@outbox.africa">info@outbox.africa</a> &nbsp; </p>
+          <p>&nbsp;</p>
+          <ol>
+            <li>The purpose of collection and processing </li>
+          </ol>
+          <p>We process your Data to make analysis on the progress of the Program and improve the Program and learn from
+            the data you have collected, including monitoring and evaluating the effectiveness of the Program and to
+            learn
+            how to improve it for future participants. </p>
+          <ol>
+            <li>What data do we process? </li>
+          </ol>
+          <p>&nbsp;</p>
+          <p>We may call upon you to submit to us for processing and or third party disclosure some or all of the
+            following Data, in so far as it relates to your participation in the Program as our partner / supplier: </p>
+
+          <table class="consent-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;">No.</th>
+                <th>Category of Data</th>
+                <th style="width: 180px;">Indicate which applies*</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="No.">1.</td>
+                <td data-label="Category of Data">Name of company / enterprise</td>
+                <td data-label="Applies" class="checkbox-cell">
+                  <label><input type="checkbox" name="data[]" value="company_name" /></label>
+                </td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td>Enterprise contact information (location, addresses, phone, email, etc.)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]" value="contact_info" /></label>
+                </td>
+              </tr>
+              <tr>
+                <td>3.</td>
+                <td>Category of enterprise (micro, small, medium or large)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]"
+                      value="enterprise_category" /></label></td>
+              </tr>
+              <tr>
+                <td>4.</td>
+                <td>Details of shareholders and directors (name, ID, contact info)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]"
+                      value="shareholders_directors" /></label></td>
+              </tr>
+              <tr>
+                <td>5.</td>
+                <td>Assigned employees or consultants (name, ID, contact info)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]"
+                      value="employees_assigned" /></label></td>
+              </tr>
+              <tr>
+                <td>6.</td>
+                <td>Contact info of sub-partners</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]"
+                      value="subpartners_contact" /></label></td>
+              </tr>
+              <tr>
+                <td>7.</td>
+                <td>Sub-partners’ employees and consultants (name, ID, contact info)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]"
+                      value="subpartner_employees" /></label></td>
+              </tr>
+              <tr>
+                <td>8.</td>
+                <td>Program participants’ info (ID numbers, youth in work, etc.)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]"
+                      value="participants_info" /></label></td>
+              </tr>
+              <tr>
+                <td>9.</td>
+                <td>Financial information (bank details, TIN, etc.)</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]" value="financial_info" /></label>
+                </td>
+              </tr>
+              <tr>
+                <td>10.</td>
+                <td>Other business, technical, or commercial info</td>
+                <td class="checkbox-cell"><label><input type="checkbox" name="data[]" value="other_info" /></label></td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <p> <em>*Tick as appropriate</em></p>
+          <ol>
+            <li>What is the legal basis for processing the Data? </li>
+          </ol>
+          <p>&nbsp;</p>
+          <p>We process your Data within the framework of the applicable legislation, and taking into full account your
+            commercial interests and the fundamental rights of the data subjects, being those of your employees involved
+            in delivering the Program on your behalf.</p>
+          <p>&nbsp;</p>
+          <ol>
+            <li>Who will the Data be shared with?</li>
+          </ol>
+          <p>&nbsp;</p>
+          <p>We may share the Data with following parties, for the purposes indicated:</p>
+          <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+              <td width="38" valign="top">
+                <p><strong>No.</strong></p>
+              </td>
+              <td width="162" valign="top">
+                <p><strong>Name of organisation </strong></p>
+              </td>
+              <td width="151" valign="top">
+                <p><strong>Address and contact details of organisation </strong></p>
+              </td>
+              <td width="230" valign="top">
+                <p><strong>Purpose of disclosure </strong></p>
+              </td>
+            </tr>
+            <tr>
+              <td width="38" valign="top">
+                <p>1.</p>
+              </td>
+              <td width="162" valign="top">
+                <p>Mastercard Foundation </p>
+              </td>
+              <td width="151" valign="top">
+                <p>Mastercard Foundation Office (Twed Heights &ndash; Muwafu Road), Kampala </p>
+              </td>
+              <td width="230" valign="top">
+                <p>Monitor compliance with Program requirements by partner organisations</p>
+              </td>
+            </tr>
+            <tr>
+              <td width="38" valign="top">
+                <p>2.</p>
+              </td>
+              <td width="162" valign="top">
+                <p>Vanguard Research and Advisory Services Limited </p>
+              </td>
+              <td width="151" valign="top">
+                <p>Ssuuna II Road, Ntinda, Kampala</p>
+              </td>
+              <td width="230" valign="top">
+                <p>Undertake Program impact monitoring and evaluation works </p>
+              </td>
+            </tr>
+            <tr>
+              <td width="38" valign="top">
+                <p>3.</p>
+              </td>
+              <td width="162" valign="top">
+                <p>Deloitte Canada</p>
+              </td>
+              <td width="151" valign="top">
+                <p>Toronto, Canada</p>
+              </td>
+              <td width="230" valign="top">
+                <p>Ingest, store and process the data at the direction of the Foundation </p>
+              </td>
+            </tr>
+            <tr>
+              <td width="38" valign="top">
+                <p>4.</p>
+              </td>
+              <td width="162" valign="top">
+                <p>Our professional advisors</p>
+              </td>
+              <td width="151" valign="top">
+                <p>Varied, depending on the institution</p>
+              </td>
+              <td width="230" valign="top">
+                <p>Seeking legal, audit and other advice in relation to the Program</p>
+              </td>
+            </tr>
+            <tr>
+              <td width="38" valign="top">
+                <p>&nbsp;</p>
+              </td>
+              <td width="162" valign="top">
+                <p>Government authorities</p>
+              </td>
+              <td width="151" valign="top">
+                <p>Varied, depending on&nbsp; requesting institution </p>
+              </td>
+              <td width="230" valign="top">
+                <p>Compliance with legal requirements and obligations</p>
+              </td>
+            </tr>
+            <tr>
+              <td width="38" valign="top">
+                <p>5.</p>
+              </td>
+              <td width="162" valign="top">
+                <p>Other <em>(please specify)</em></p>
+              </td>
+              <td width="151" valign="top">
+                <p>&nbsp;</p>
+              </td>
+              <td width="230" valign="top">
+                <p>&nbsp;</p>
+              </td>
+            </tr>
+          </table>
+          <ol>
+            <li>Your rights </li>
+          </ol>
+          <p>&nbsp;</p>
+          <p>You have the following rights regarding the Data:</p>
+          <ol>
+            <li><strong>Right of access</strong>: You have the right to request a copy of the Data we hold about your
+              enterprise and or your employees.</li>
+            <li><strong>Right to rectification</strong>: You have the right to ask us to correct any inaccuracies in the
+              Data we hold.</li>
+            <li><strong>Right to erasure</strong>: You have the right to ask us to delete any aspect of the Data.</li>
+            <li><strong>Right to restriction of processing</strong>: You have the right to ask us to restrict the
+              processing of the Data.</li>
+            <li><strong>Right to object to processing</strong>: You have the right to object to the processing of the
+              Data.</li>
+            <li><strong>Right to data portability</strong>. You have the right to request that the Data be transferred
+              to
+              another organisation.</li>
+            <li><strong>Right to withdraw consent</strong>. You have the right to withdraw your consent to share the
+              Data
+              at any time. Should any of your employees wish to withdraw your consent, please by sending an email to <a
+                href="mailto:zulu@outbox.africa">zulu@outbox.africa</a> or calling us at +256 (0)&nbsp;392 000 152.
+            </li>
+          </ol>
+          <p>&nbsp;</p>
+          <ol>
+            <li>Your declarations</li>
+          </ol>
+          <p>This consent is freely given with full understanding of the purpose of data collection, processing and
+            transfer.</p>
+          <ol>
+            <li>No compensation will be due to us or our employees / consultants involved with the Program for the
+              disclosure and or transfer of the Data.</li>
+          </ol>
+          <p>&nbsp;</p>
+          <ol>
+            <li>We warrant and represent that all aspects of the Data which may be used to identify a natural person was
+              collected, held, processed, disclosed and transfer authorized by us in accordance with applicable legal
+              requirements.</li>
+          </ol>
+          <ol>
+            <li>We agree to release and hold harmless all the entities to whom the Data will be disclosed from any
+              claims,
+              damages or expenses resulting from the use of the Data for the purposes of the Program.</li>
+          </ol>
+          <p>&nbsp;</p>
+          <ol>
+            <li>All the rights, protections and permissions we have granted in terms of this release letter shall
+              continue
+              for as long as the Program requirements so stipulate.</li>
+          </ol>
+          <ol>
+            <li>If you have any questions or wish to exercise your rights, please contact us using the contact details
+              provided above.</li>
+          </ol>
+          <p>&nbsp;</p>
+          <p>The undersigned signatory executing this authorization certifies that he/she has authority to act on behalf
+            of the Company.</p>
+          <p>&nbsp;</p>
+
+          <div
+            style="max-width: 700px; margin: 0 auto; padding: 30px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+            <h3 style="color: #4CAF50; margin-bottom: 20px; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">
+              Participant
+            </h3>
+
+            <!-- Name -->
+            <label style="display: block; margin-bottom: 5px;">Name:</label>
+            <input type="text" name="userName" id="participantName" required
+              style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" />
+
+            <!-- Signature Pad -->
+            <label style="display: block; margin-bottom: 5px;">Signature (draw below or upload PNG/JPG):</label>
+            <canvas id="participantSignature"
+              style="border: 1px solid #ccc; border-radius: 5px; width: 100%; height: 120px;"></canvas>
+            <button type="button" onclick="clearSignature('participantSignature')"
+              style="margin: 10px 0; padding: 8px 12px; background-color: #f44336; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+              Clear Signature
+            </button>
+
+            <!-- Upload Signature -->
+            <input type="file" id="signatureUpload" accept=".png,.jpg,.jpeg" style="margin-top: 10px;" />
+            <img id="signaturePreview"
+              style="display: none; margin-top: 10px; width: 100%; height: 120px; object-fit: contain; border: 1px solid #ccc;" />
+
+            <!-- Address -->
+            <label style="display: block; margin-top: 20px; margin-bottom: 5px;">Address:</label>
+            <input type="text" name="userAddress" required
+              style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" />
+
+            <!-- Date -->
+            <label style="display: block; margin-bottom: 5px;">Date:</label>
+            <input type="date" name="userDate" id="participantDate" required
+              style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" />
+
+            <!-- Submit -->
+            <div style="margin-top: 30px; text-align: center;">
+              <button type="button" onclick="submitConsentForm()"
+                style="padding: 12px 30px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Submit Consent Form
+              </button>
+              <p id="statusMessage" style="margin-top: 15px; color: #333;"></p>
+            </div>
+          </div>
+    </form>
+
+  </div>
+  </div>
+  </div>
+
+
+
+  <script>
+    let uploadedSignature = null;
+    let isDrawing = false;
+
+    function generateUUID() {
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+
+    function getFormattedDate() {
+      const now = new Date();
+      return now.toISOString().split("T")[0]; // YYYY-MM-DD
+    }
+
+    function getTimestamp() {
+      const now = new Date();
+      return `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;
+    }
+
+    function generateFormID(name) {
+      const date = getFormattedDate().replace(/-/g, "");
+      const cleanName = name.trim().toUpperCase().replace(/\s+/g, "");
+      return `CF-${date}-${cleanName}-${getTimestamp()}`;
+    }
+
+    function clearSignature(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      uploadedSignature = null;
+
+      const uploadInput = document.getElementById("signatureUpload");
+      uploadInput.value = "";
+      document.getElementById("signaturePreview").style.display = "none";
+
+      canvas.style.display = "block";
+    }
+
+    function disablePad(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = "none";
+    }
+
+    function setupSignaturePad(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      canvas.width = 600;
+      canvas.height = 120;
+      const ctx = canvas.getContext("2d");
+
+      function getPosition(e) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          x: (e.clientX || e.touches[0].clientX) - rect.left,
+          y: (e.clientY || e.touches[0].clientY) - rect.top
+        };
+      }
+
+      function startDraw(e) {
+        isDrawing = true;
+        uploadedSignature = null;
+        document.getElementById("signatureUpload").value = "";
+        document.getElementById("signaturePreview").style.display = "none";
+        canvas.style.display = "block";
+
+        const pos = getPosition(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+      }
+
+      function endDraw() {
+        isDrawing = false;
+        ctx.beginPath();
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const pos = getPosition(e);
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "#000";
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      }
+
+      canvas.addEventListener("mousedown", startDraw);
+      canvas.addEventListener("mouseup", endDraw);
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mouseout", endDraw);
+
+      canvas.addEventListener("touchstart", startDraw, { passive: false });
+      canvas.addEventListener("touchend", endDraw, { passive: false });
+      canvas.addEventListener("touchmove", draw, { passive: false });
+    }
+
+    function handleUploadPreview() {
+      const input = document.getElementById("signatureUpload");
+      const preview = document.getElementById("signaturePreview");
+      const canvas = document.getElementById("participantSignature");
+
+      input.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const allowedTypes = ['image/png', 'image/jpeg'];
+        if (!allowedTypes.includes(file.type)) {
+          alert("⚠️ Only PNG and JPG/JPEG files are allowed.");
+          e.target.value = "";
+          preview.style.display = "none";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const img = new Image();
+          img.onload = function () {
+            const resizeCanvas = document.createElement("canvas");
+            resizeCanvas.width = 600;
+            resizeCanvas.height = 120;
+            const ctx = resizeCanvas.getContext("2d");
+
+            ctx.drawImage(img, 0, 0, resizeCanvas.width, resizeCanvas.height);
+            uploadedSignature = resizeCanvas.toDataURL("image/png");
+            preview.src = uploadedSignature;
+            preview.style.display = "block";
+
+            disablePad("participantSignature");
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function getSignatureDataURL(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      return canvas.toDataURL("image/png");
+    }
+
+    function validateConsentCheckboxes() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"][name="data[]"]');
+      const checked = Array.from(checkboxes).filter(cb => cb.checked);
+      return checked.length >= 2;
+    }
+
+    async function submitConsentForm() {
+      const name = document.getElementById("participantName").value.trim();
+      const date = document.getElementById("participantDate").value;
+      const today = getFormattedDate();
+
+      if (!name || !date) {
+        alert("⚠️ Please fill in all fields before submitting.");
+        return;
+      }
+
+      if (date !== today) {
+        alert("⚠️ The date of signing must be today.");
+        return;
+      }
+
+      if (!validateConsentCheckboxes()) {
+        alert("⚠️ Please check at least TWO items under data collected.");
+        return;
+      }
+
+      const signatureData = uploadedSignature || getSignatureDataURL("participantSignature");
+      const uuid = generateUUID();
+      const formID = generateFormID(name);
+
+      const { PDFDocument, rgb, StandardFonts } = PDFLib;
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([595.28, 841.89]);
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const fontSize = 12;
+
+      page.drawText(`Participant Name: ${name}`, { x: 50, y: 750, size: fontSize, font });
+      page.drawText(`Date: ${date}`, { x: 50, y: 730, size: fontSize, font });
+      page.drawText(`Consent ID: ${uuid}`, { x: 50, y: 710, size: fontSize, font, color: rgb(0.4, 0.4, 0.4) });
+      page.drawText(`Form ID: ${formID}`, { x: 50, y: 690, size: fontSize, font, color: rgb(0.4, 0.4, 0.4) });
+
+      const signatureImg = await pdfDoc.embedPng(signatureData);
+      page.drawText("Signature:", { x: 50, y: 650, size: fontSize, font });
+      page.drawImage(signatureImg, { x: 50, y: 590, width: 150, height: 50 });
+
+      const pdfBytes = await pdfDoc.save();
+      const base64 = btoa(String.fromCharCode(...pdfBytes));
+      const filename = `Consent_Form_${formID}.pdf`;
+
+      try {
+        const response = await fetch("api/upload", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ fileBase64: base64, filename }),
+          mode: "cors",
+          credentials: "include"
+        });
+
+
+
+
+        const text = await response.text();
+        document.getElementById("statusMessage").textContent = "✅ Form submitted successfully.";
+        console.log("✅ Upload Response:", text);
+      } catch (error) {
+        console.error("❌ Upload failed:", error);
+        document.getElementById("statusMessage").textContent = "❌ Failed to submit the form.";
+      }
+    }
+
+    window.onload = () => {
+      setupSignaturePad("participantSignature");
+      handleUploadPreview();
+
+      const today = getFormattedDate();
+      const dateInput = document.getElementById("participantDate");
+      dateInput.value = today;
+      dateInput.min = today;
+      dateInput.max = today;
+    };
+  </script>
+
+
+  <!-- Make sure PDFLib is included -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</body>
+
+</html>
