@@ -1,53 +1,66 @@
-async function submitConsentForm() {
-  const name = document.getElementById("participantName").value.trim();
-  const date = document.getElementById("participantDate").value;
-  const today = getFormattedDate();
+import chromium from 'chrome-aws-lambda';
+import fs from 'fs/promises';
+import { v4 as uuidv4 } from 'uuid';
 
-  if (!name || !date) {
-    alert("⚠️ Please fill in all fields before submitting.");
-    return;
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Only POST requests allowed' });
   }
 
-  if (date !== today) {
-    alert("⚠️ The date of signing must be today.");
-    return;
+  const { html, filename = "consent-form.pdf", uuid, formID, signatureData } = req.body;
+
+  if (!html || !uuid || !formID) {
+    return res.status(400).json({ error: "Missing required data (html, uuid, formID)" });
   }
 
-  if (!validateConsentCheckboxes()) {
-    alert("⚠️ Please check at least TWO items under data collected.");
-    return;
-  }
-
-  const signatureData = uploadedSignature || getSignatureDataURL("participantSignature");
-  const uuid = generateUUID();
-  const formID = generateFormID(name);
-
-  // Extract the full HTML content (or build a dedicated HTML string if needed)
-  const htmlContent = document.documentElement.outerHTML;
+  const timestamp = new Date().toISOString();
+  let browser = null;
 
   try {
-    const response = await fetch("/api/generate-pdf-from-html", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        html: htmlContent,
-        filename: `Consent_Form_${formID}.pdf`,
-        signatureData,
-        uuid,
-        formID,
-      }),
+    browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
     });
 
-    if (!response.ok) throw new Error("Server error");
+    const page = await browser.newPage();
 
-    const result = await response.json();
-    console.log("✅ PDF Generated:", result.url || result.message);
+    // Inject the HTML content directly
+    await page.setContent(html, { waitUntil: 'networkidle0' });
 
-    document.getElementById("statusMessage").textContent = "✅ Form submitted and PDF generated.";
-  } catch (error) {
-    console.error("❌ PDF generation failed:", error);
-    document.getElementById("statusMessage").textContent = "❌ Failed to generate the PDF.";
+    // Optionally embed the signature if passed
+    if (signatureData) {
+      await page.evaluate((dataURL) => {
+        const sigImg = document.querySelector("#participantSignature img");
+        if (sigImg) {
+          sigImg.src = dataURL;
+        }
+      }, signatureData);
+    }
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '40px',
+        bottom: '40px',
+        left: '40px',
+        right: '40px',
+      },
+    });
+
+    // Log the event
+    const logLine = `${timestamp} | UUID: ${uuid} | Form ID: ${formID} | Filename: ${filename}\n`;
+    await fs.appendFile('/tmp/pdf-html-generation-log.txt', logLine);
+
+    await browser.close();
+
+    // Respond with success
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({ message: "PDF generated successfully" });
+  } catch (err) {
+    console.error("Error generating PDF from HTML:", err);
+    if (browser) await browser.close();
+    res.status(500).json({ error: "Failed to generate PDF from HTML." });
   }
 }
